@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tài Xỉu Demo</title>
+
+<style>
+    body{
+        margin:0;
+        font-family:Arial;
+        background:#0f172a;
+        color:white;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+    }
+
+    .box{
+        background:#1e293b;
+        padding:30px;
+        border-radius:20px;
+        width:350px;
+        text-align:center;
+        box-shadow:0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h1{
+        margin-bottom:20px;
+        color:#38bdf8;
+    }
+
+    .money{
+        font-size:22px;
+        margin-bottom:20px;
+    }
+
+    input{
+        width:100%;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        margin-bottom:15px;
+        font-size:16px;
+    }
+
+    .buttons{
+        display:flex;
+        gap:10px;
+    }
+
+    button{
+        flex:1;
+        padding:15px;
+        border:none;
+        border-radius:12px;
+        font-size:18px;
+        cursor:pointer;
+        font-weight:bold;
+        transition:0.2s;
+    }
+
+    .tai{
+        background:#22c55e;
+        color:white;
+    }
+
+    .xiu{
+        background:#ef4444;
+        color:white;
+    }
+
+    button:hover{
+        transform:scale(1.05);
+    }
+
+    .dice{
+        margin-top:20px;
+        font-size:35px;
+    }
+
+    .result{
+        margin-top:15px;
+        font-size:22px;
+        font-weight:bold;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>TÀI XỈU DEMO</h1>
+
+    <div class="money">
+        Coin: <span id="coin">1000</span>
+    </div>
+
+    <input type="number" id="bet" placeholder="Nhập số coin">
+
+    <div class="buttons">
+        <button class="tai" onclick="play('tai')">TÀI</button>
+        <button class="xiu" onclick="play('xiu')">XỈU</button>
+    </div>
+
+    <div class="dice" id="dice">🎲 🎲 🎲</div>
+
+    <div class="result" id="result"></div>
+
+</div>
+
+<script>
+
+let coin = 1000;
+
+function randomDice(){
+    return Math.floor(Math.random()*6)+1;
+}
+
+function play(choice){
+
+    let bet = parseInt(document.getElementById("bet").value);
+
+    if(!bet || bet <= 0){
+        alert("Nhập coin cược");
+        return;
+    }
+
+    if(bet > coin){
+        alert("Không đủ coin");
+        return;
+    }
+
+    let d1 = randomDice();
+    let d2 = randomDice();
+    let d3 = randomDice();
+
+    let total = d1 + d2 + d3;
+
+    let result = total >= 11 ? "tai" : "xiu";
+
+    document.getElementById("dice").innerHTML =
+        `${d1} 🎲 ${d2} 🎲 ${d3}`;
+
+    if(choice === result){
+        coin += bet;
+        document.getElementById("result").innerHTML =
+            `THẮNG +${bet} coin`;
+    }else{
+        coin -= bet;
+        document.getElementById("result").innerHTML =
+            `THUA -${bet} coin`;
+    }
+
+    document.getElementById("coin").innerHTML = coin;
+
+}
+
+</script>
+
+</body>
+</html>
