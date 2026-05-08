@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON CASINO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#070b16;
+    font-family:'Poppins',sans-serif;
+    color:white;
+    overflow:hidden;
+}
+
+.bg{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:
+    radial-gradient(circle at top left,#00f0ff33,transparent 30%),
+    radial-gradient(circle at bottom right,#ff00ff33,transparent 30%);
+    filter:blur(20px);
+}
+
+.container{
+    position:relative;
+    z-index:10;
+    width:100%;
+    max-width:420px;
+    margin:auto;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:20px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:700;
+    color:#00f0ff;
+    text-shadow:0 0 20px #00f0ff;
+}
+
+.balance{
+    background:#111827;
+    padding:10px 18px;
+    border-radius:15px;
+    border:1px solid #00f0ff55;
+    box-shadow:0 0 15px #00f0ff22;
+}
+
+.card{
+    background:#111827aa;
+    backdrop-filter:blur(20px);
+    border:1px solid #ffffff10;
+    border-radius:25px;
+    padding:25px;
+    box-shadow:0 0 30px #000;
+}
+
+.dice-area{
+    margin-top:20px;
+    text-align:center;
+}
+
+.dice{
+    font-size:70px;
+    margin:20px 0;
+    animation:float 2s infinite ease-in-out;
+}
+
+@keyframes float{
+    0%{transform:translateY(0px);}
+    50%{transform:translateY(-10px);}
+    100%{transform:translateY(0px);}
+}
+
+.total{
+    font-size:40px;
+    font-weight:700;
+    color:#00f0ff;
+    text-shadow:0 0 20px #00f0ff;
+}
+
+.bet-input{
+    width:100%;
+    margin-top:25px;
+    padding:16px;
+    border:none;
+    border-radius:16px;
+    background:#1f2937;
+    color:white;
+    font-size:18px;
+    outline:none;
+}
+
+.buttons{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+}
+
+.btn{
+    flex:1;
+    padding:18px;
+    border:none;
+    border-radius:18px;
+    font-size:20px;
+    font-weight:700;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.btn:hover{
+    transform:scale(1.05);
+}
+
+.tai{
+    background:linear-gradient(45deg,#00f0ff,#0084ff);
+    color:white;
+    box-shadow:0 0 20px #00f0ff88;
+}
+
+.xiu{
+    background:linear-gradient(45deg,#ff00aa,#ff0066);
+    color:white;
+    box-shadow:0 0 20px #ff00aa88;
+}
+
+.result{
+    margin-top:20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:700;
+}
+
+.history{
+    margin-top:25px;
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+}
+
+.his{
+    min-width:55px;
+    height:55px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#1f2937;
+    font-weight:700;
+}
+
+.online{
+    margin-top:25px;
+    text-align:center;
+    color:#00ff99;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="container">
+
+    <div class="topbar">
+        <div class="logo">NEONBET</div>
+
+        <div class="balance">
+            💰 <span id="coin">5000</span>
+        </div>
+    </div>
+
+    <div class="card">
+
+        <div class="dice-area">
+
+            <div class="dice" id="dice">
+                🎲
+            </div>
+
+            <div class="total" id="total">
+                ?
+            </div>
+
+        </div>
+
+        <input
+        type="number"
+        id="bet"
+        class="bet-input"
+        placeholder="Nhập coin cược">
+
+        <div class="buttons">
+
+            <button
+            class="btn tai"
+            onclick="play('tai')">
+            TÀI
+            </button>
+
+            <button
+            class="btn xiu"
+            onclick="play('xiu')">
+            XỈU
+            </button>
+
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div class="history" id="history"></div>
+
+        <div class="online">
+            🔥 12,482 Online
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let coin = 5000;
+let historyArr = [];
+
+function randomDice(){
+    return Math.floor(Math.random()*6)+1;
+}
+
+function play(type){
+
+    let bet =
+    parseInt(document.getElementById("bet").value);
+
+    if(!bet || bet <= 0){
+        alert("Nhập coin");
+        return;
+    }
+
+    if(bet > coin){
+        alert("Không đủ coin");
+        return;
+    }
+
+    let d1 = randomDice();
+    let d2 = randomDice();
+    let d3 = randomDice();
+
+    let total = d1+d2+d3;
+
+    document.getElementById("dice")
+    .innerHTML =
+    `${d1} ${d2} ${d3}`;
+
+    document.getElementById("total")
+    .innerHTML = total;
+
+    let result =
+    total >= 11 ? "tai" : "xiu";
+
+    if(type === result){
+
+        coin += bet;
+
+        document.getElementById("result")
+        .innerHTML =
+        `✅ THẮNG +${bet}`;
+
+    }else{
+
+        coin -= bet;
+
+        document.getElementById("result")
+        .innerHTML =
+        `❌ THUA -${bet}`;
+    }
+
+    document.getElementById("coin")
+    .innerHTML = coin;
+
+    historyArr.unshift(total);
+
+    if(historyArr.length > 10){
+        historyArr.pop();
+    }
+
+    renderHistory();
+
+}
+
+function renderHistory(){
+
+    let html = "";
+
+    historyArr.forEach(item=>{
+
+        html += `
+        <div class="his">
+            ${item}
+        </div>
+        `;
+
+    });
+
+    document.getElementById("history")
+    .innerHTML = html;
+
+}
+
+</script>
+
+</body>
+</html>
