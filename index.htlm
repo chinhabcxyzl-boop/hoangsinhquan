@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEONBET DEMO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#070b16;
+    color:white;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:
+    radial-gradient(circle at top left,#00e5ff33,transparent 30%),
+    radial-gradient(circle at bottom right,#ff00aa33,transparent 30%);
+    filter:blur(30px);
+    z-index:-1;
+}
+
+.screen{
+    width:100%;
+    height:100vh;
+    display:none;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.screen.active{
+    display:block !important;
+}
+
+.center{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    height:100%;
+}
+
+.logo{
+    font-size:42px;
+    font-weight:700;
+    color:#00e5ff;
+    text-shadow:0 0 25px #00e5ff;
+}
+
+.loading-text{
+    margin-top:20px;
+    font-size:20px;
+    color:#aaa;
+}
+
+.loading-bar{
+    width:260px;
+    height:14px;
+    background:#1e293b;
+    border-radius:30px;
+    overflow:hidden;
+    margin-top:20px;
+}
+
+.loading-fill{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#00e5ff,#ff00aa);
+    transition:width 0.1s;
+}
+
+.login-box{
+    margin-top:80px;
+    background:#111827cc;
+    backdrop-filter:blur(20px);
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 0 30px #000;
+    width:100%;
+    max-width:400px;
+}
+
+.title{
+    text-align:center;
+    font-size:34px;
+    margin-bottom:25px;
+    color:#00e5ff;
+}
+
+.input{
+    width:100%;
+    padding:16px;
+    margin-bottom:16px;
+    border:none;
+    border-radius:16px;
+    background:#1e293b;
+    color:white;
+    font-size:16px;
+}
+
+.input::placeholder{
+    color:#888;
+}
+
+.btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(45deg,#00e5ff,#007bff);
+    color:white;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.balance{
+    background:#111827;
+    padding:10px 18px;
+    border-radius:16px;
+    border:1px solid #00e5ff33;
+}
+
+.banner{
+    width:100%;
+    height:170px;
+    border-radius:25px;
+    background:linear-gradient(45deg,#ff00aa,#7c3aed);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:34px;
+    font-weight:700;
+    box-shadow:0 0 30px #ff00aa55;
+}
+
+.section-title{
+    margin:25px 0 15px;
+    font-size:20px;
+}
+
+.games{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.game-card{
+    background:#111827;
+    border-radius:22px;
+    padding:25px 10px;
+    text-align:center;
+    font-size:22px;
+    border:1px solid #ffffff10;
+    box-shadow:0 0 20px #000;
+    cursor:pointer;
+}
+
+.game-card span{
+    display:block;
+    margin-top:10px;
+    font-size:16px;
+}
+
+.online{
+    margin-top:20px;
+    text-align:center;
+    color:#00ff99;
+}
+
+.back{
+    margin-bottom:20px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.dice-box{
+    background:#111827;
+    padding:25px;
+    border-radius:25px;
+}
+
+.dice{
+    font-size:45px;
+    text-align:center;
+    margin:20px 0;
+}
+
+.total{
+    text-align:center;
+    font-size:45px;
+    color:#00e5ff;
+    font-weight:700;
+}
+
+.bet-input{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:16px;
+    background:#1e293b;
+    color:white;
+    margin-top:20px;
+    font-size:16px;
+}
+
+.bet-buttons{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+}
+
+.bet-btn{
+    flex:1;
+    padding:18px;
+    border:none;
+    border-radius:18px;
+    color:white;
+    font-size:20px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.tai{
+    background:linear-gradient(45deg,#00e5ff,#007bff);
+}
+
+.xiu{
+    background:linear-gradient(45deg,#ff00aa,#ff4d4d);
+}
+
+.result{
+    text-align:center;
+    margin-top:20px;
+    font-size:24px;
+    font-weight:700;
+    min-height:30px;
+}
+
+.history{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    margin-top:20px;
+    padding-bottom:10px;
+}
+
+.his-item{
+    min-width:55px;
+    height:55px;
+    background:#1e293b;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    flex-shrink:0;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Loading -->
+<div class="screen active center" id="loadingScreen">
+
+    <div class="logo">NEONBET</div>
+
+    <div class="loading-text">
+        Loading...
+        <span id="percent">0%</span>
+    </div>
+
+    <div class="loading-bar">
+        <div class="loading-fill" id="loadingFill"></div>
+    </div>
+
+</div>
+
+<!-- Login -->
+<div class="screen center" id="loginScreen">
+
+    <div class="title">ĐĂNG NHẬP</div>
+
+    <div class="login-box">
+
+        <input class="input" placeholder="Tài khoản">
+
+        <input class="input" type="password" placeholder="Mật khẩu">
+
+        <button class="btn" onclick="login()">
+            ĐĂNG NHẬP
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Home -->
+<div class="screen" id="homeScreen">
+
+    <div class="topbar">
+
+        <div class="logo" style="font-size:28px;">
+            NEONBET
+        </div>
+
+        <div class="balance">
+            💰 <span id="coin">5000</span>
+        </div>
+
+    </div>
+
+    <div class="banner">
+        JACKPOT
+    </div>
+
+    <div class="section-title">
+        HOT GAMES
+    </div>
+
+    <div class="games">
+
+        <div class="game-card" onclick="openTaiXiu()">
+            🎲
+            <span>TÀI XỈU</span>
+        </div>
+
+        <div class="game-card">
+            🎰
+            <span>SLOT</span>
+        </div>
+
+        <div class="game-card">
+            ⚽
+            <span>SPORT</span>
+        </div>
+
+        <div class="game-card">
+            👑
+            <span>VIP</span>
+        </div>
+
+    </div>
+
+    <div class="online">
+        🔥 12,842 Online
+    </div>
+
+</div>
+
+<!-- Tai Xiu -->
+<div class="screen" id="taixiuScreen">
+
+    <div class="back" onclick="goHome()">
+        ← Quay lại
+    </div>
+
+    <div class="dice-box">
+
+        <div class="dice" id="dice">
+            🎲 🎲 🎲
+        </div>
+
+        <div class="total" id="total">
+            ?
+        </div>
+
+        <input
+        type="number"
+        class="bet-input"
+        id="bet"
+        placeholder="Nhập coin cược">
+
+        <div class="bet-buttons">
+
+            <button
+            class="bet-btn tai"
+            onclick="play('tai')">
+            TÀI
+            </button>
+
+            <button
+            class="bet-btn xiu"
+            onclick="play('xiu')">
+            XỈU
+            </button>
+
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div class="history" id="history"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+let percent = 0;
+
+let loading = setInterval(()=>{
+
+    percent++;
+
+    document.getElementById('percent').innerHTML = percent + '%';
+
+    document.getElementById('loadingFill').style.width = percent + '%';
+
+    if(percent >= 100){
+
+        clearInterval(loading);
+
+        document.getElementById('loadingScreen').classList.remove('active');
+
+        document.getElementById('loginScreen').classList.add('active');
+
+    }
+
+},20);
+
+function login(){
+
+    document.getElementById('loginScreen').classList.remove('active');
+
+    document.getElementById('homeScreen').classList.add('active');
+
+}
+
+function openTaiXiu(){
+
+    document.getElementById('homeScreen').classList.remove('active');
+
+    document.getElementById('taixiuScreen').classList.add('active');
+
+}
+
+function goHome(){
+
+    document.getElementById('taixiuScreen').classList.remove('active');
+
+    document.getElementById('homeScreen').classList.add('active');
+
+}
+
+let coin = 5000;
+
+let historyArr = [];
+
+function dice(){
+    return Math.floor(Math.random()*6)+1;
+}
+
+function play(type){
+
+    let bet = parseInt(document.getElementById('bet').value);
+
+    if(!bet || bet <= 0){
+        alert('Nhập coin cược');
+        return;
+    }
+
+    if(bet > coin){
+        alert('Không đủ coin');
+        return;
+    }
+
+    let d1 = dice();
+    let d2 = dice();
+    let d3 = dice();
+
+    let total = d1 + d2 + d3;
+
+    document.getElementById('dice').innerHTML =
+    `🎲 ${d1} &nbsp; 🎲 ${d2} &nbsp; 🎲 ${d3}`;
+
+    document.getElementById('total').innerHTML = total;
+
+    let result = '';
+
+    if(d1 === d2 && d2 === d3){
+
+        result = 'triple';
+
+    }else if(total >= 11){
+
+        result = 'tai';
+
+    }else{
+
+        result = 'xiu';
+
+    }
+
+    if(result === 'triple'){
+
+        coin -= bet;
+
+        document.getElementById('result').innerHTML =
+        `💀 BỘ BA -${bet}`;
+
+    }else if(type === result){
+
+        coin += bet;
+
+        document.getElementById('result').innerHTML =
+        `✅ THẮNG +${bet}`;
+
+    }else{
+
+        coin -= bet;
+
+        document.getElementById('result').innerHTML =
+        `❌ THUA -${bet}`;
+
+    }
+
+    document.getElementById('coin').innerHTML = coin;
+
+    historyArr.unshift(total);
+
+    if(historyArr.length > 10){
+        historyArr.pop();
+    }
+
+    renderHistory();
+
+    document.getElementById('bet').value = '';
+
+}
+
+function renderHistory(){
+
+    let html = '';
+
+    historyArr.forEach(item=>{
+
+        html += `
+        <div class="his-item">
+            ${item}
+        </div>
+        `;
+
+    });
+
+    document.getElementById('history').innerHTML = html;
+
+}
+
+</script>
+
+</body>
+</html>
